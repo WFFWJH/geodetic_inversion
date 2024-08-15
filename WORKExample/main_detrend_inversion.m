@@ -3,20 +3,22 @@ clc
 clear
 
 %% setup MATLAB and GMT paths
-package_path = '/Users/zej011/work/zeyu/matlab/finite_fault_inversion';
-addpath(genpath(package_path));
-external_path = '/Users/zej011/work/zeyu/matlab/external_func';
-addpath(genpath(external_path));
-addpath('/Users/zej011/work/zeyu/matlab');
-addpath('/Users/zej011/work/Kang_tutorial/candis');
-addpath('/Users/zej011/work/Kang_tutorial/codes_utilities/matlab/igppsar');
+% package_path = '/Users/zej011/work/zeyu/matlab/finite_fault_inversion';
+% addpath(genpath(package_path));
+% external_path = '/Users/zej011/work/zeyu/matlab/external_func';
+% addpath(genpath(external_path));
+% addpath('/Users/zej011/work/zeyu/matlab');
+% addpath('/Users/zej011/work/Kang_tutorial/candis');
+% addpath('/Users/zej011/work/Kang_tutorial/codes_utilities/matlab/igppsar');
+addpath('../OtherFunc');
+addpath('../sign_mask');
 % setup your own CSHELL scripts and GMT paths
 setenv('PATH',[getenv('PATH'),':/Users/zej011/work/zeyu/cshell']);
 setenv('PATH',[getenv('PATH'),':/usr/local/bin']);  % add the path of GMT
 
 
 %% remove the near-field unwrapping errors manually first
-% clean_insar_data;
+clean_insar_data;
 
 % % cut the grid of looking angles and DEM to be the same size
 % fid = fopen('all_data_list');
