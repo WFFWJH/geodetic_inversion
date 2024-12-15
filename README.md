@@ -91,6 +91,8 @@ distance in order to catch the curve gradient**
 
 
 ### Step 4: build the fault geometry
+-  ## Sometimes, little prior knowledge of the fault is available (length, depth, dipping angles, location, etc.), so it is beneficial to use an [MCMC Bayesian Inversion](https://github.com/evavra/pyffit) to pin it down.
+
 - `fault_file`: The fault ID is counted based on the order of fault segments written in `fault_file`, all fault segments have a default dip angle of 90 degrees.
 This file is same as the one in Step 3.
 - `dip_change_id = 1:5`: The array of fault IDs that have dip angles **NOT** equal to 90 degrees.
