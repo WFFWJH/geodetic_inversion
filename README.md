@@ -1,4 +1,4 @@
-# geodetic_inversion
+# SlipSolve: Geodetic Linear Inversion
 This repo homogeneous/layered inversion using InSAR/GPS
 
 New: currently the repo also supports non-linear fault construction and inversion!
@@ -46,8 +46,11 @@ mask_insar_phase(this_track, insar_file, mask_file, scale, 'los_max', 80, 'detre
 ```
 This step would output a subsampled grid file called "unwrap_clean_sample.grd", in 100 meters resolution as default.
 
+### (Optional & New) using mask_insar_data.m to interactively mask out noisy pixels
+You can directly run the mask_insar_data.m in order to interactively, manually apply masks and sign masks to remove the noisy pixels instead of running the clean_insar_data.m and sign_mask_offset.m
 
 ### Step 2: detrend the phase and remove the phase ambiguity
+There are several ways to detrend the data. You can try them to see which one works the best for you. \
 If we have enough far-field GPS data, we could use those GPS data to invert a coarse slip model to detrend the unwrapped phase. \
 In cases such as Pamir and Qinghai earthquake, since we do not have enough GPS sites covered, we could just assume a far-field pixel that corresponds to zero displacement.
 ```MATLAB
@@ -65,6 +68,17 @@ remove_ref_from_grid(grdin,grdout,lonf,latf,ref_lon,threshold);
 If your study area crosses two different UTM zones, it would be complicated to convert to the UTM coordinates at the UTM zone boundary directly. 
 So we shift the central meridian to the west (ref_lon), so that you could define a broader UTM zone than the common one. Usualy choose a ref_lon <= lonc.
 
+Alternatively, you can try to fit a ramp to the data to detrend it
+```MATLAB
+[ramp,cffs]=deramp_xyz[Z,X,Y,code]
+```
+or fit a ramp to the residuals of an initial inversion, and subtract it from the data to produce the deramped data
+```MATLAB
+deramp_from_residuals.m
+```
+
+
+
 
 ### (Optional) apply the sign mask for the detrended offset data
 Because offset data are noisy than phase ones, sometimes you even need to apply a sign mask across the fault.
@@ -75,10 +89,12 @@ movefile los_clean_detrend.grd los_clean_unmask.grd
 sign_mask_offset(this_track, 'los_clean_unmasked.grd');
 ```
 
+
+
 ---
 ## Step 3 ~ 7 are written in the file `main_detrend_inversion.m`
 ### Step 3: apply quad-tree sampling to all detrended data (LOS/RNG/AZO)
-- `fault_file`: file that writes linearized fault segments (Format: lon1  lat1  lon2  lat2, each pair correponds to one fault end)
+- `fault_file`: file that writes linearized fault segments (Format: lon1  lat1  lon2  lat2, each pair corresponds to one fault end). The fault file can be obtained via 1) local fault database 2) manually tracing the fault coordinate from remote-sensing data. You can use the function 'fitPiecewiseLine.m' to construct fault segments from the curved surface trace coordinate data.
 - `area = [71.8 73.9 37.7 39.1]`: rectangular area that crops the InSAR grid file
 - `los_list`: list of InSAR directories that are to be downsampled (Format: this_track, number_of_sampled_points(e.g.,3000))
 - `Nmin = 2`: Minimum size of points to be averaged (Nmin x Nmin).
@@ -94,7 +110,7 @@ distance in order to catch the curve gradient**
 -  ## Sometimes, little prior knowledge of the fault is available (length, depth, dipping angles, location, etc.), so it is beneficial to use an [MCMC Bayesian Inversion](https://github.com/evavra/pyffit) to pin it down.
 
 - `fault_file`: The fault ID is counted based on the order of fault segments written in `fault_file`, all fault segments have a default dip angle of 90 degrees.
-This file is same as the one in Step 3.
+This file is same as the one in Step 3. The fault file can be obtained via 1) local fault database 2) manually tracing the fault coordinate from remote-sensing data. You can use the function 'fitPiecewiseLine.m' to construct fault segments from the curved surface trace coordinate data.
 - `dip_change_id = 1:5`: The array of fault IDs that have dip angles **NOT** equal to 90 degrees.
 - `dip_angle = [87.7, 81.8, 85, 89.3, 89.3]`: The array of dip angles that are consistent with the array of `dip_change_id`.
 - `len_top = 1.2e3`: The top length of each fault patch
