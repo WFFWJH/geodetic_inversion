@@ -33,9 +33,9 @@ if ~isempty(fault_file)
    LS = length(lonf) / 2;
 end
 
-XX=[xx1';xx2';xx2';xx1'];
-YY=[yy1';yy1';yy2';yy2'];
-C=[zout';zout';zout';zout'];
+% XX=[xx1';xx2';xx2';xx1'];
+% YY=[yy1';yy1';yy2';yy2'];
+% C=[zout';zout';zout';zout'];
 
 % % too large range
 % zmin=min(min(zinsar(~isnan(zinsar)))); 
@@ -44,7 +44,7 @@ C=[zout';zout';zout';zout'];
 % 
 % cmin=zmin+0.5*rz;
 % cmax=zmax-0.5*rz;
-cmean = nanmean(zinsar(:));
+cmean = mean(zinsar(:),"omitnan");
 cstd = std(zinsar(:),'omitnan');
 cmin = cmean - 8*cstd;
 cmax = cmean + 8*cstd;
@@ -69,9 +69,9 @@ end
 set(gca,'YDir','Normal');
 set(h,'alphadata',~isnan(zinsar));
 axis equal;
-hcolor=colorbar('north','Position',[0.1 0.25,0.3,0.01]);
+colorbar('north','Position',[0.1 0.25,0.3,0.01]);
 colormap('jet')
-caxis([cmin cmax]);
+clim([cmin cmax]);
 axis([xmin xmax ymin ymax])
 
 psv2=[0.5 0.3 0.45 0.55];
@@ -91,9 +91,9 @@ if ~isempty(fault_file)
 end
 
 axis equal
-hcolor=colorbar('north','Position',[0.55 0.25,0.3,0.01]);
+colorbar('north','Position',[0.55 0.25,0.3,0.01]);
 colormap('jet')
-caxis([cmin cmax])
+clim([cmin cmax])
 axis([xmin xmax ymin ymax])
 title(['#pt=',num2str(Npt)]);
 

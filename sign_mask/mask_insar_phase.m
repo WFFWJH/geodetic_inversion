@@ -81,14 +81,15 @@ function mask_insar_phase(filepath,insar_file,mask_file,wavelength,varargin)
     % if detrend the phase with topo
     ramp = zeros(size(unw_clean));
     if detrend
-        if isfile([this_track,'/dem_samp.grd'])
-            [~,~,topo] = grdread2([this_track,'/dem_samp.grd']);
+        if isfile([this_track,'/dem.grd'])
+            [~,~,topo] = grdread2([this_track,'/dem.grd']);
             topo = topo./1000;
             pout = fit_ramp_topo(unw_clean(:),mlon(:),mlat(:),topo(:));
             ramp = pout(1).*mlon + pout(2).*mlat + pout(3).*topo + pout(4);
+            
             unw_clean = unw_clean - ramp;
         else
-            disp('No dem_samp.grd found! Do not detrend the phase!');
+            disp('No dem.grd found! Do not detrend the phase!');
         end          
     end
     
@@ -97,49 +98,63 @@ function mask_insar_phase(filepath,insar_file,mask_file,wavelength,varargin)
     los_clean = -unw_clean*wavelength/4/pi;   
     grdwrite2(lon,lat,los_clean,[this_track,'/',out_grid]);
 
-    lonmin = min(lon); lonmax = max(lon);
-    latmin = min(lat); latmax = max(lat);
+    % lonmin = min(lon); lonmax = max(lon);
+    % latmin = min(lat); latmax = max(lat);
 
     figure;
 %     subplot('Position',[0.03 0.3 0.45 0.5]); hold on
     subplot(2,2,1); hold on
-    pcolor(lon,lat,unw_old);
+    h = imagesc(lon,lat,unw_old);
+    % 创建 AlphaData 矩阵（1 = 不透明，0 = 完全透明）
+    alphaData = ones(size(unw)); % 默认全不透明
+    alphaData(isnan(unw)) = 0;   % NaN 位置设为透明
+
+    % 应用透明度设置
+    set(h, 'AlphaData', alphaData); % 关键步骤：设置透明度
+
     shading flat
     colormap jet
     colorbar
-    axis([lonmin lonmax latmin latmax]);
-    caxis([-los_max los_max]);
+    axis equal tight;
+    clim([-los_max los_max]);
     title('Original LOS');
     set(gca,'Fontsize',15);
 
 %     subplot('Position',[0.53 0.3 0.45 0.5]); hold on
     subplot(2,2,2); hold on
-    pcolor(lon,lat,unw);
+    h = imagesc(lon,lat,unw);
+    % 应用透明度设置
+    set(h, 'AlphaData', alphaData); % 关键步骤：设置透明度
     shading flat
     colormap jet
-%     colorbar
-    axis([lonmin lonmax latmin latmax]);
-    caxis([-los_max los_max]);
+    colorbar
+    axis equal tight;
+    clim([-los_max los_max]);
     title('Masked LOS');
     set(gca,'Fontsize',15);    
     
     subplot(2,2,3); hold on
-    pcolor(lon,lat,unw_clean);
+    h = imagesc(lon,lat,unw_clean);
+    % 应用透明度设置
+    set(h, 'AlphaData', alphaData); % 关键步骤：设置透明度
     shading flat
     colormap jet
     colorbar
-    axis([lonmin lonmax latmin latmax]);
-    caxis([-los_max los_max]);
+    axis equal tight;
+    clim([-los_max los_max]);
     title('Masked and Detrended LOS');
     set(gca,'Fontsize',15); 
     
     subplot(2,2,4); hold on
-    pcolor(lon,lat,ramp);
+    % pcolor(lon,lat,ramp);
+    h = imagesc(lon,lat,ramp);
+    % 应用透明度设置
+    set(h, 'AlphaData', alphaData); % 关键步骤：设置透明度
     shading flat
     colormap jet
-%     colorbar
-    axis([lonmin lonmax latmin latmax]);
-    caxis([-los_max los_max]);
+    colorbar
+    axis equal tight;
+    % clim([-los_max los_max]);
     title('Detrended Ramp');
     set(gca,'Fontsize',15);
         

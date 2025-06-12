@@ -82,12 +82,12 @@ iter_step2=para(16);
 clean_insar_data
 
 %% Step 2: detrend the phase and remove the phase ambiguity
-grdin1='./myama/unwrap_clean_sample.grd';
-grdout1='./myama/los_clean_detrend.grd';
+grdin1='./myama/D106/LOS/unwrap_clean_sample.grd';
+grdout1='./myama/D106/LOS/los_clean_detrend.grd';
 remove_ref_from_grid(grdin1,grdout1,lonf,latf,ref_lon,threshold);
-% grdin2='./ASC100/LOS2/unwrap_clean_sample.grd';
-% grdout2='./ASC100/LOS2/los_clean_detrend.grd';
-% remove_ref_from_grid(grdin2,grdout2,lonf,latf,ref_lon,threshold);
+grdin2='./myama/D106/RNG/rng_off_sample.grd';
+grdout2='./myama/D106/RNG/los_clean_detrend.grd';
+remove_ref_from_grid(grdin2,grdout2,lonf,latf,ref_lon,threshold);
 
 %% Step 3: apply quad-tree sampling to all detrended data 
 make_insar_data(data_list,Nmin,Nmax,'method','quadtree','fault',fault_file,'area',[93.90 97.24 17.24 23.73],'ref_lon',ref_lon);
@@ -101,8 +101,8 @@ slip_model_vs = load_fault_one_plane(fault_file,'dip_change_id',dip_change_id,'d
 [slip_model,~,~,insar_model] = make_fault_from_insar3(slip_model_vs,slip_model_ds,iter_step,'shallow_dip_id',[],'segment_smooth_file',segment_file,'intersect_smooth_file',intersect_file,'fault',fault_file,'lonc',lonc,'latc',latc,'ref_lon',ref_lon,'model_type','okada');
 iint=iter_step;
 
-plot_insar_model_resampled(['./myama/los_samp',num2str(iint),'.mat'],insar_model,'iter_step',iint,'fault',fault_file,'model_type','okada','misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lonc,'latc',latc);
-show_slip_model(slip_model,'misfit_range',400,'ref_lon',ref_lon,'lonc',lonc,'latc',latc,'axis_range',[-100 110 -45 45 -25 0]);
+plot_insar_model_resampled(['./myama/D106/LOS/los_samp',num2str(iint),'.mat'],insar_model,'iter_step',iint,'fault',fault_file,'model_type','okada','misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lonc,'latc',latc);
+show_slip_model(slip_model,'misfit_range',400,'ref_lon',ref_lon,'lonc',lonc,'latc',latc,'axis_range',[50 150 -100 300 -50 0]);
 
 
 %% Step 6: iterative sampling data using the model predictions (Wang and Fialko, GRL 2015) 
@@ -113,5 +113,5 @@ iint=iter_step2;
 [slip_model,rms,model_roughness,insar_model] = make_fault_from_insar3(slip_model_vs,slip_model_ds,iter_step2, ...
                      'segment_smooth_file',segment_file,'intersect_smooth_file',intersect_file,'fault',fault_file, ...
                      'lonc',lonc,'latc',latc,'ref_lon',ref_lon);
-plot_insar_model_resampled(['./myama/los_samp',num2str(iint),'.mat'],insar_model,'iter_step',iint,'fault',fault_file,'model_type','okada','misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lonc,'latc',latc);
-show_slip_model(slip_model,'misfit_range',400,'ref_lon',ref_lon,'lonc', lonc,'latc', latc,'axis_range',[-100 110 -45 45 -25 0]);
+plot_insar_model_resampled(['./myama/D106/LOS/los_samp',num2str(iint),'.mat'],insar_model,'iter_step',iint,'fault',fault_file,'model_type','okada','misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lonc,'latc',latc,'axis_range',[-150,200,0,600]);
+show_slip_model(slip_model,'misfit_range',400,'ref_lon',ref_lon,'lonc', lonc,'latc', latc,'axis_range',[50 150 -100 300 -50 0]);

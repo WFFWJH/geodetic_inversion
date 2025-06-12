@@ -1,4 +1,4 @@
-function [pout] = fit_ramp_topo(p,x,y,h);
+function [pout] = fit_ramp_topo(p,x,y,h)
 % fit the input phase as:
 %
 %  phs = a*x + b*y +c*topo+d;
@@ -16,7 +16,7 @@ hgt=h(indx_good);
 
 G=zeros(Nin,4);
 
-for k=1:Nin;
+for k=1:Nin
  G(k,1)=xin(k);
  G(k,2)=yin(k);
  G(k,3)=hgt(k);

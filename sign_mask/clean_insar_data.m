@@ -2,16 +2,6 @@ wavelength_C = 0.0554658*100;  % wavelength of C-band
 wavelength_L = 0.242452*100;   % wavelength of L-band
 scale = -4*pi;                 % for offsets data
 
-% this_track = '/Users/zej011/coseismic/ASC100/LOS';
-% insar_file = 'unwrap_ll.grd';
-% mask_file = 'mask_txt';
-% mask_insar_phase(this_track,insar_file,mask_file,wavelength_C);
-
-% this_track = '/Users/zej011/coseismic/ASC100/LOS2';
-% insar_file = 'unwrap_ll.grd';
-% mask_file = 'mask_txt';
-% mask_insar_phase(this_track,insar_file,mask_file,wavelength_C,'los_max',80);
-
 % this_track = '/Users/zej011/coseismic/DES5/LOS';
 % insar_file = 'unwrap_ll.grd';
 % mask_file = 'mask_txt';
@@ -22,15 +12,17 @@ scale = -4*pi;                 % for offsets data
 % mask_file = 'mask_txt';
 % mask_insar_phase(this_track,insar_file,mask_file,wavelength_C,'los_max',80);
 
-this_track = './DES5/LOS2';
+this_track = './myama/D106/LOS';
 insar_file = 'unwrap_ll.grd';
 mask_file = 'mask_txt';
-mask_insar_phase(this_track,insar_file,mask_file,wavelength_C,'los_max',80,'detrend',1,'mask',1,'nomask',0);
+mask_insar_phase(this_track,insar_file,mask_file,wavelength_C,'los_max',80,'detrend',1,'nomask',1);
 
-% this_track = '/Users/zej011/coseismic/ASC100/offsets';
-% insar_file = 'rng_off_filt_ll.grd';
-% mask_file = 'mask_txt';
-% mask_insar_phase(this_track,insar_file,mask_file,scale);
+this_track = './myama/D106/RNG';
+insar_file = 'rng_off_ll.grd';
+sampled_grid = 'rng_off_sample_m.grd';
+subsample_insar_grd(this_track,insar_file,sampled_grid,100);% sub-grid the file in 100 meters resolution (default) 
+output_grid = 'rng_off_sample.grd';
+system(['gmt grdmath ',sampled_grid,' 100',' MUL = ',output_grid]);
 
 % this_track = '/Users/zej011/coseismic/DES5/offsets';
 % insar_file = 'rng_off_filt_ll.grd';

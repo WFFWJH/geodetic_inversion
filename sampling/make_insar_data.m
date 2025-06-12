@@ -135,14 +135,14 @@ for k=1:ntrack
     yin=y1(indx_y);
     losin=los_this_track(indx_y,indx_x);
     
-    [xdem,ydem,zdem] = grdread2([this_track,'/dem_samp.grd']);
+    [~,~,zdem] = grdread2([this_track,'/dem.grd']);
     demin = zdem(indx_y,indx_x);
     clear xdem ydem
     
     % make sure the grid size of looking angle same with phase (without multi-looking)
-    [x2,y2,ze]=grdread2([this_track,'/look_e.grd']);
-    [x3,y3,zn]=grdread2([this_track,'/look_n.grd']);
-    [x4,y4,zu]=grdread2([this_track,'/look_u.grd']);
+    [~,~,ze]=grdread2([this_track,'/look_e.grd']);
+    [~,~,zn]=grdread2([this_track,'/look_n.grd']);
+    [~,~,zu]=grdread2([this_track,'/look_u.grd']);
     ein=ze(indx_y,indx_x);
     nin=zn(indx_y,indx_x);
     uin=zu(indx_y,indx_x);
@@ -167,22 +167,22 @@ for k=1:ntrack
    % the resolution of geocoded insar data is about 100 meters
 %    Nmin = 3;   Nmax = 150;  for quad-tree sampling
 %    Nmin = Nmax = 15;        for uniform sampling
-   [xout,yout,zout,Npt,rms_out,xx1,xx2,yy1,yy2]=make_insar_downsample(xin,yin,losin,this_npt,Nmin,Nmax,'mean');
+   [xout,yout,zout,~,rms_out,xx1,xx2,yy1,yy2]=make_insar_downsample(xin,yin,losin,this_npt,Nmin,Nmax,'mean');
 %    [xutm_sar,yutm_sar] = utm2ll(xout,yout,0,1);
    [xutm_sar,yutm_sar] = ll2xy(xout,yout,ref_lon);
    xsar=xutm_sar-xo;
    ysar=yutm_sar-yo; 
 %    covd = calc_insar_cov(xsar,ysar,this_sig,this_L);
 %   
-   [xe_out,ye_out,ve]=make_look_downsample(xin,yin,ein,xout,yout,xx1,xx2,yy1,yy2);
-   [xn_out,yn_out,vn]=make_look_downsample(xin,yin,nin,xout,yout,xx1,xx2,yy1,yy2);
-   [xu_out,yu_out,vz]=make_look_downsample(xin,yin,uin,xout,yout,xx1,xx2,yy1,yy2);
-   [xdem_out,ydem_out,dem_out]=make_look_downsample(xin,yin,demin,xout,yout,xx1,xx2,yy1,yy2);
+   [~,~,ve]=make_look_downsample(xin,yin,ein,xout,yout,xx1,xx2,yy1,yy2);
+   [~,~,vn]=make_look_downsample(xin,yin,nin,xout,yout,xx1,xx2,yy1,yy2);
+   [~,~,vz]=make_look_downsample(xin,yin,uin,xout,yout,xx1,xx2,yy1,yy2);
+   [~,~,dem_out]=make_look_downsample(xin,yin,demin,xout,yout,xx1,xx2,yy1,yy2);
    
    sampled_insar_data=double([xsar,ysar,zout,ve,vn,vz]);     % save the downsampled insar data
    save([this_track,'/los_samp',iint,'.mat'],'sampled_insar_data','rms_out','dem_out');
    
-   [h0,h1,h2]=plot_insar_sample_new(xin,yin,losin,zout,xx1,xx2,yy1,yy2,'fault',fault_file); 
+   [h0,~,~]=plot_insar_sample_new(xin,yin,losin,zout,xx1,xx2,yy1,yy2,'fault',fault_file); 
    set(h0,'PaperPositionMode','auto');
 %    set(h0,'visible','off');
    saveas(h0,[this_track,'/','los_samp',num2str(iint)],'epsc');

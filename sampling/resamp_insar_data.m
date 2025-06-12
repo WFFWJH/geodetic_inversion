@@ -85,22 +85,22 @@ function resamp_insar_data(slip_model_in, data_list,Nmin,Nmax,iter_step,varargin
        this_npt=npt(k);
        
        % [x1,y1,demin]=grdread2([this_track,'/','dem_low.grd']);
-       [x1,y1,losin]=grdread2([this_track,'/','los_ll_low','.grd']);   % in the unit of cm
-       [x1,y1,ze]=grdread2([this_track,'/','look_e_low','.grd']);
-       [x1,y1,zn]=grdread2([this_track,'/','look_n_low','.grd']);
+       [~,~,losin]=grdread2([this_track,'/','los_ll_low','.grd']);   % in the unit of cm
+       [~,~,ze]=grdread2([this_track,'/','look_e_low','.grd']);
+       [~,~,zn]=grdread2([this_track,'/','look_n_low','.grd']);
        [x1,y1,zu]=grdread2([this_track,'/','look_u_low','.grd']);
        
        % multi-look to reduce the computation time
        if Nlook > 1
           % [lon1,lat1,deml] = multi_look(x1,y1,demin,Nlook,Nlook);
-          [lon1,lat1,losl] = multi_look(x1,y1,losin,Nlook,Nlook);
-          [lon1,lat1,zel] = multi_look(x1,y1,ze,Nlook,Nlook);
-          [lon1,lat1,znl] = multi_look(x1,y1,zn,Nlook,Nlook);
+          [~,~,losl] = multi_look(x1,y1,losin,Nlook,Nlook);
+          [~,~,zel] = multi_look(x1,y1,ze,Nlook,Nlook);
+          [~,~,znl] = multi_look(x1,y1,zn,Nlook,Nlook);
           [lon1,lat1,zul] = multi_look(x1,y1,zu,Nlook,Nlook);
        else
            lon1 = x1;
            lat1 = y1;
-           deml = demin;
+           % deml = demin;
            losl = losin;
            zel = ze;
            znl = zn;
@@ -132,12 +132,12 @@ function resamp_insar_data(slip_model_in, data_list,Nmin,Nmax,iter_step,varargin
        disp(size(lon1));
        disp(size(lat1));
        disp(size(los_model));
-       [lon_model,lat_model,zout_model,Npt,rms_out,xx1,xx2,yy1,yy2]=make_insar_downsample(lon1,lat1,los_model,this_npt,Nmin,Nmax,'mean'); % same with downsample
+       [lon_model,lat_model,~,~,rms_out,xx1,xx2,yy1,yy2]=make_insar_downsample(lon1,lat1,los_model,this_npt,Nmin,Nmax,'mean'); % same with downsample
 
-       [lon_pt,lat_pt,zout]=make_look_downsample(lon1,lat1,losl,lon_model,lat_model,xx1,xx2,yy1,yy2);
+       [~,~,zout]=make_look_downsample(lon1,lat1,losl,lon_model,lat_model,xx1,xx2,yy1,yy2);
        % [lon_pt,lat_pt,dem_out]=make_look_downsample(lon1,lat1,deml,lon_model,lat_model,xx1,xx2,yy1,yy2);
-       [lon_pt,lat_pt,ve]=make_look_downsample(lon1,lat1,zel,lon_model,lat_model,xx1,xx2,yy1,yy2);
-       [lon_pt,lat_pt,vn]=make_look_downsample(lon1,lat1,znl,lon_model,lat_model,xx1,xx2,yy1,yy2);
+       [~,~,ve]=make_look_downsample(lon1,lat1,zel,lon_model,lat_model,xx1,xx2,yy1,yy2);
+       [~,~,vn]=make_look_downsample(lon1,lat1,znl,lon_model,lat_model,xx1,xx2,yy1,yy2);
        [lon_pt,lat_pt,vz]=make_look_downsample(lon1,lat1,zul,lon_model,lat_model,xx1,xx2,yy1,yy2);
        
        % convert lon/lat to x/y
@@ -164,7 +164,7 @@ function resamp_insar_data(slip_model_in, data_list,Nmin,Nmax,iter_step,varargin
    %     covd = calc_insar_cov(xpt,ypt,this_sig,this_L); 
    %     save([this_track,'/','los_samp',num2str(iint),'.mat'],'insar_data','covd');
        save([this_track,'/los_samp',num2str(iint),'.mat'],'sampled_insar_data','rms_out');
-       [hf,h1,h2]=plot_insar_sample_new(x1,y1,losin,zout,xx1,xx2,yy1,yy2,'fault',fault_file);
+       [hf,~,~]=plot_insar_sample_new(x1,y1,losin,zout,xx1,xx2,yy1,yy2,'fault',fault_file);
        set(hf,'PaperPositionMode','auto');
 %        set(hf,'visible','off');
 %       saveas(hf,[this_track,'/','los_samp',num2str(iint)],'epsc');

@@ -67,7 +67,9 @@ if ~isempty(varargin)
    end
 end
 
-figure; hold on
+figure; 
+view(3);
+hold on
 SLIP=[];
 XV=[];
 YV=[];

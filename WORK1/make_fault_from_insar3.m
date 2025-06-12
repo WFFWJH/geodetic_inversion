@@ -76,13 +76,13 @@ disp(['There are total ',num2str(max(slip_model(:,1))),'segments']);
 
 
 
-    % [G1_raw,G1,bd1_raw,bd1] = build_green_function(slip_model,['./ASC100/LOS2/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
-    [G2_raw,G2,bd2_raw,bd2] = build_green_function(slip_model,['./myama/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+    [G1_raw,G1,bd1_raw,bd1] = build_green_function(slip_model,['./myama/D106/RNG/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+    [G2_raw,G2,bd2_raw,bd2] = build_green_function(slip_model,['./myama/D106/LOS/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
 %[G3_raw,G3,bd3_raw,bd3] = build_green_function(slip_model,'/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/Research/TurkeyEQ/Dataclean/Scansar77/los_samp1.mat','insar','noramp',model_type);
 %[G4_raw,G4,bd4_raw,bd4] = build_green_function(slip_model,'/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/Research/TurkeyEQ/InverstionShoot@Apr11/los_samp_alos2_rng.mat','insar','noramp',model_type);
 %[G5_raw,G5,bd5_raw,bd5] = build_green_function(slip_model,'/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/Research/TurkeyEQ/InverstionShoot@Apr11/los_samp_alos2_azo.mat','AZO','noramp',model_type);
 %[G6_raw,G6,bd6_raw,bd6] = build_green_function(slip_model,'/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/Research/TurkeyEQ/Dataclean/Scansar184/los_samp1.mat','insar','noramp',model_type);
-    G1_raw = []; G1 = []; bd1_raw = []; bd1 = [];
+    % G1_raw = []; G1 = []; bd1_raw = []; bd1 = [];
 %     G2_raw = []; G2 = []; bd2_raw = []; bd2 = [];
  G3_raw = []; G3 = []; bd3_raw = []; bd3 = [];
  G4_raw = []; G4 = []; bd4_raw = []; bd4 = [];

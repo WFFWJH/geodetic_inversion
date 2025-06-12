@@ -80,12 +80,12 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    
    subplot('Position',[0.04 0.55 0.42 0.42]); hold on
    scatter(xin,yin,sz,losin,'filled');
-   read_plot_fault_segment('SKFS_fault.txt','m');
+   % read_plot_fault_segment('SKFS_fault.txt','m','ll');
    colormap jet
    colorbar
    title(['Sampled Data (',label_name,')']);
    set(gca,'Fontsize',20);
-   caxis([defo_min defo_max]);
+   clim([defo_min defo_max]);
    axis(axis_range);
 %    axis equal
    % plot the fault segments
@@ -103,12 +103,12 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
 
    subplot('Position',[0.54 0.55 0.42 0.42]); hold on
    scatter(xin,yin,sz,los_model,'filled');
-   read_plot_fault_segment('SKFS_fault.txt','m');
+   % read_plot_fault_segment('SKFS_fault.txt','m','ll');
    colormap jet
    colorbar
    title('Model');
    set(gca,'Fontsize',20);
-   caxis([defo_min defo_max]);
+   clim([defo_min defo_max]);
    axis(axis_range);
 %    axis equal
    if ~isempty(fault_file)
@@ -125,12 +125,12 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
 
    subplot('Position',[0.26 0.03 0.42 0.42]); hold on
    scatter(xin,yin,sz,los_res,'filled');
-   read_plot_fault_segment('SKFS_fault.txt','m');
+   % read_plot_fault_segment('SKFS_fault.txt','m','ll');
    colormap jet
    colorbar
    title('Residual');
    set(gca,'Fontsize',20);
-   caxis([-res_max res_max]);       % center with zero
+   clim([-res_max res_max]);       % center with zero
    axis(axis_range);
 %    axis equal
    if ~isempty(fault_file)
