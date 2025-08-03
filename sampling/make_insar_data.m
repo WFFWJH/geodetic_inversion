@@ -79,7 +79,7 @@ while tmp_txt ~= -1
     npt(count) = str2double(strs{2});
     num_of_strs = size(strs,2);
     % replaced by the region defined in the data_list
-    if num_of_strs == 6, region(count,:) = str2num(char(strs{3:6})); end   
+    if num_of_strs >= 6, region(count,:) = str2num(char(strs{3:6})); end   
     tmp_txt = fgetl(fid);
 end
 fclose(fid);

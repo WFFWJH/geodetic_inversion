@@ -1,10 +1,10 @@
 #############Configuration File for Geodetic Inversion, For Files#################
 ##grdin
 #InSAR grid input
-./myama/D106/LOS/unwrap_ll.grd
+./myanmar/D106/LOS/unwrap_ll.grd
 ##grdout
 #InSAR grid output
-./myama/D106/LOS/los_clean_detrend.grd
+./myanmar/D106/LOS/los_clean_detrend.grd
 ##data_list
 #list of InSAR directories that are to be downsampled (Format: this_track, number_of_sampled_points(e.g.,3000))
 detrend.list

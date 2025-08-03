@@ -1,11 +1,11 @@
-function [slip_model,RMS_misfit,model_roughness,insar_model2] = make_fault_from_insar3(slip_model_vs,slip_model_ds,iter_step,varargin)
+function [slip_model,RMS_misfit,model_roughness] = make_fault_from_insar3(slip_model_vs,slip_model_ds,iter_step,varargin)
 % Build the finite fault model using fault trace derived from both offsets and seismicity data
 % return the variance reduction between the model and data
 % Started by Zeyu Jin on 07/15/2019
 % added data_list input later for experiment. Xiaoyu Zou, 11/2/2022
 
 %% default values
-lambda = 0.3e-1;%default 1e-1
+lambda = 1;%default 1e-1
 
 %alpha=1;%weight to the interferogram, default 1
 beta=1;%weight to the offsets data, defaut 0.2
@@ -76,18 +76,34 @@ disp(['There are total ',num2str(max(slip_model(:,1))),'segments']);
 
 
 
-    [G1_raw,G1,bd1_raw,bd1] = build_green_function(slip_model,['./myama/D106/RNG/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
-    [G2_raw,G2,bd2_raw,bd2] = build_green_function(slip_model,['./myama/D106/LOS/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
-%[G3_raw,G3,bd3_raw,bd3] = build_green_function(slip_model,'/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/Research/TurkeyEQ/Dataclean/Scansar77/los_samp1.mat','insar','noramp',model_type);
-%[G4_raw,G4,bd4_raw,bd4] = build_green_function(slip_model,'/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/Research/TurkeyEQ/InverstionShoot@Apr11/los_samp_alos2_rng.mat','insar','noramp',model_type);
-%[G5_raw,G5,bd5_raw,bd5] = build_green_function(slip_model,'/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/Research/TurkeyEQ/InverstionShoot@Apr11/los_samp_alos2_azo.mat','AZO','noramp',model_type);
-%[G6_raw,G6,bd6_raw,bd6] = build_green_function(slip_model,'/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/Research/TurkeyEQ/Dataclean/Scansar184/los_samp1.mat','insar','noramp',model_type);
-    % G1_raw = []; G1 = []; bd1_raw = []; bd1 = [];
-%     G2_raw = []; G2 = []; bd2_raw = []; bd2 = [];
- G3_raw = []; G3 = []; bd3_raw = []; bd3 = [];
- G4_raw = []; G4 = []; bd4_raw = []; bd4 = [];
- G5_raw = []; G5 = []; bd5_raw = []; bd5 = [];
- G6_raw = []; G6 = []; bd6_raw = []; bd6 = [];
+[G1_raw,G1,bd1_raw,bd1] = build_green_function(slip_model,['./myanmar/D33/LOS/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+% [G2_raw,G2,bd2_raw,bd2] = build_green_function(slip_model,['./myanmar/D33/RNG/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+[G3_raw,G3,bd3_raw,bd3] = build_green_function(slip_model,['./myanmar/D33/AZI/los_samp',num2str(iint),'.mat'],'AZO','noramp',model_type);
+[G4_raw,G4,bd4_raw,bd4] = build_green_function(slip_model,['./myanmar/D106/LOS/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+% [G5_raw,G5,bd5_raw,bd5] = build_green_function(slip_model,['./myanmar/D106/RNG/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+[G6_raw,G6,bd6_raw,bd6] = build_green_function(slip_model,['./myanmar/D106/AZI/los_samp',num2str(iint),'.mat'],'AZO','noramp',model_type);
+[G7_raw,G7,bd7_raw,bd7] = build_green_function(slip_model,['./myanmar/A143/LOS/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+% [G8_raw,G8,bd8_raw,bd8] = build_green_function(slip_model,['./myanmar/A143/RNG/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+[G9_raw,G9,bd9_raw,bd9] = build_green_function(slip_model,['./myanmar/A143/AZI/los_samp',num2str(iint),'.mat'],'AZO','noramp',model_type);
+
+[G10_raw,G10,bd10_raw,bd10] = build_green_function(slip_model,['./myanmar/A70/LOS/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+% [G11_raw,G11,bd11_raw,bd11] = build_green_function(slip_model,['./myanmar/A70/RNG/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
+[G12_raw,G12,bd12_raw,bd12] = build_green_function(slip_model,['./myanmar/A70/AZI/los_samp',num2str(iint),'.mat'],'AZO','noramp',model_type);
+
+
+% G1_raw = []; G1 = []; bd1_raw = []; bd1 = [];
+G2_raw = []; G2 = []; bd2_raw = []; bd2 = [];
+% G3_raw = []; G3 = []; bd3_raw = []; bd3 = [];
+% G4_raw = []; G4 = []; bd4_raw = []; bd4 = [];
+G5_raw = []; G5 = []; bd5_raw = []; bd5 = [];
+% G6_raw = []; G6 = []; bd6_raw = []; bd6 = [];
+% G7_raw = []; G7 = []; bd7_raw = []; bd7 = [];
+G8_raw = []; G8 = []; bd8_raw = []; bd8 = [];
+% G9_raw = []; G9 = []; bd9_raw = []; bd9 = [];
+% G10_raw = []; G10 = []; bd10_raw = []; bd10 = [];
+G11_raw = []; G11 = []; bd11_raw = []; bd11 = [];
+% G12_raw = []; G12 = []; bd12_raw = []; bd12 = [];
+
    Gs_raw = []; Gs = []; bs_raw = []; bs = [];
 %  Gp_raw = []; Gp = []; bp_raw = []; bp = [];
 %     [G4_raw,G4,bd4_raw,bd4] = build_green_function(slip_model,['ALOS2_stripe/LOS/los_samp',num2str(iint),'.mat'],'insar','noramp',model_type);
@@ -112,11 +128,11 @@ bottom_layer_no = max(slip_model(:,3)); ratio = 5e-4;
 % right_fault = [11,1];   ratio = 3e-4;%tested by xiaoyu
 % [Wr,dr] = zero_slip_boundary(slip_model,right_fault,'left',ratio);%used to be right, tested by xiaoyu to make it 'left'
 
-left_fault = [];
+left_fault = [1];
 ratio = 3e-4;
 [Wr,dr] = zero_slip_boundary(slip_model,left_fault,'right',ratio);%used to be left, tested by xiaoyu to make it 'right'
 
-right_fault = [];   ratio = 3e-4;%tested by xiaoyu
+right_fault = [4];   ratio = 3e-4;%tested by xiaoyu
 [Wl,dl] = zero_slip_boundary(slip_model,right_fault,'left',ratio);%used to be right, tested by xiaoyu to make it 'left'
 
 
@@ -126,14 +142,14 @@ right_fault = [];   ratio = 3e-4;%tested by xiaoyu
 %     A2D = 1/3;    % three ascending tracks (ASC64,T065,T066) & one descending track (DES71)
 %     A2D = 1;       % equal weight of each dataset
 %Testing by Xiaoyu Zou: changed all 's' to 'p'
-G_raw = [G1;G2;G3;G4;G5;G6;Gs];
+G_raw = [G1;G2;G3;G4;G5;G6;G7;G8;G9;G10;G11;G12;Gs];
 Greens = [G_raw;H*lambda/h1;Wb;Wl;Wr];
 
-bd_raw = [bd1;bd2;bd3;bd4;bd5;bd6;bs];
+bd_raw = [bd1;bd2;bd3;bd4;bd5;bd6;bd7;bd8;bd9;bd10;bd11;bd12;bs];
 bdata_sm = [bd_raw;zeros(h1,1);db;dl;dr];
 
-GrF = [G1_raw;G2_raw;G3_raw;G4_raw;G5_raw;G6_raw;Gs_raw];
-Bdata = [bd1_raw;bd2_raw;bd3_raw;bd4_raw;bd5_raw;bd6_raw;bs_raw];
+GrF = [G1_raw;G2_raw;G3_raw;G4_raw;G5_raw;G6_raw;G7_raw;G8_raw;G9_raw;G10_raw;G11_raw;G12_raw;Gs_raw];
+Bdata = [bd1_raw;bd2_raw;bd3_raw;bd4_raw;bd5_raw;bd6_raw;bd7_raw;bd8_raw;bd9_raw;bd10_raw;bd11_raw;bd12_raw;bs_raw];
 
 %% the postivity constraint (adapted from Yuri's code)
 nflt = max(slip_model(:,1));
@@ -150,6 +166,7 @@ add_col = 0; NT = 2; NS = nflt;  % the number of segments
 %     [lb,ub] = bounds_new_M5(NS,NT,tSm,add_col);
 %     [lb,ub] = bounds_resolution(NS,NT,tSm,add_col);
 
+
 % linear inversion
 options = optimset('LargeScale','on','DiffMaxChange',1e-1,'DiffMinChange',1e-12, ...
     'TolCon',1e-12,'TolFun',1e-12,'TolPCG',1e-12,'TolX',1e-12,'MaxIter',1e9,'MaxPCGIter',1e9);
@@ -157,9 +174,10 @@ options = optimset('LargeScale','on','DiffMaxChange',1e-1,'DiffMinChange',1e-12,
 
 % compute the reduction of total variance (before weighing) of the downsampled data
 rms0 = sum(Bdata.^2);
-rms = sum((GrF*u-Bdata).^2);
-redu_perc = 100*(rms0-rms)/rms0;
-fprintf('rms misfit (dat., res.) = %e %e (%f%%) \n',rms0,rms,redu_perc);
+rms1 = sum((GrF*u-Bdata).^2);
+redu_perc = 100*(rms0-rms1)/rms0;
+fprintf('rms misfit (dat., res.) = %e %e (%f%%) \n',rms0,rms1,redu_perc);
+fprintf('RMS: %f\n',rms(GrF*u-Bdata));
 fprintf('resnorm, resid. = %e %e \n',sqrt(resnorm),mean(residual));
 fprintf('exitflag is %d\n',exitflag);   % 1 means the function converged to a solution x
 
@@ -179,36 +197,44 @@ slip_model(:,13) = u(sum(tSm)+1:end);
 %     write_slip_model_okada(slip_model,'fault_M7.slip');
 %     write_slip_model_okada(slip_model,'fault_M5.slip');
 
+if iint ==1
+save('greens_cache.mat', ...
+     'G_raw','Bdata','bd_raw','slip_model', 'bdata_sm', 'GrF', ...
+     'H', 'h1', 'Wb', 'Wl', 'Wr', '-v7.3');
+end
+
 %% plot the resampled data fitting
-% insar_model1 = G1_raw * u;
-insar_model2 = G2_raw * u;
-%insar_model3 = G3_raw * u;
-%insar_model4 = G4_raw * u;
-%insar_model5 = G5_raw * u;
-%insar_model6 = G6_raw * u;
-%     insar_model1 = G1_raw * u;
-%     insar_model2 = G2_raw * u;
-%     insar_model3 = G3_raw * u;
-%     insar_model4 = G4_raw * u;
-%      insar_model5 = G5_raw * u;
-%      insar_model6 = G6_raw * u;
-%     insar_model7 = G7_raw * u;
-%     insar_model8 = G8_raw * u;
+insar_model1 = G1_raw * u;
+% insar_model2 = G2_raw * u;
+insar_model3 = G3_raw * u;
+insar_model4 = G4_raw * u;
+% insar_model5 = G5_raw * u;
+insar_model6 = G6_raw * u;
+
+insar_model7 = G7_raw * u;
+% insar_model8 = G8_raw * u;
+insar_model9 = G9_raw * u;
+insar_model10 = G10_raw * u;
+% insar_model11 = G11_raw * u;
+insar_model12 = G12_raw * u;
 % %     cgps_model = Gg_raw * u; 
 % Floyd_gps_model = Gp_raw * u;
  %   survey_gps_model = Gs_raw * u;  
     
     
-%     plot_insar_model_resampled(['ASC100/LOS2/los_samp',num2str(iint),'.mat'],insar_model1,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
-%     plot_insar_model_resampled(['DES5/LOS2/los_samp',num2str(iint),'.mat'],insar_model2,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
-%%    plot_insar_model_resampled(['/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/geodetic_inversion-master/WORK/ASC100/LOS2/los_samp',num2str(iint),'.mat'],insar_model1,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
-%%    plot_insar_model_resampled(['/Users/xiaoyuzou/Library/CloudStorage/OneDrive-UCSanDiego/geodetic_inversion-master/WORK/DES5/LOS2/los_samp',num2str(iint),'.mat'],insar_model2,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
-
-%     plot_insar_model_resampled(['ALOS2_SCAN2/los_samp',num2str(iint),'.mat'],insar_model3,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
-%     plot_insar_model_resampled(['ALOS2_stripe/LOS/los_samp',num2str(iint),'.mat'],insar_model4,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
-%     plot_insar_model_resampled(['ALOS2_stripe/MAI2/los_samp',num2str(iint),'.mat'],insar_model5,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',40,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
-    
- 
+plot_insar_model_resampled(['./myanmar/D33/LOS/los_samp',num2str(iint),'.mat'],insar_model1,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+% plot_insar_model_resampled(['./myanmar/D33/RNG/los_samp',num2str(iint),'.mat'],insar_model2,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+plot_insar_model_resampled(['./myanmar/D33/AZI/los_samp',num2str(iint),'.mat'],insar_model3,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+plot_insar_model_resampled(['./myanmar/D106/LOS/los_samp',num2str(iint),'.mat'],insar_model4,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+% plot_insar_model_resampled(['./myanmar/D106/RNG/los_samp',num2str(iint),'.mat'],insar_model5,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+plot_insar_model_resampled(['./myanmar/D106/AZI/los_samp',num2str(iint),'.mat'],insar_model6,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+plot_insar_model_resampled(['./myanmar/A143/LOS/los_samp',num2str(iint),'.mat'],insar_model7,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+% plot_insar_model_resampled(['./myanmar/A143/RNG/los_samp',num2str(iint),'.mat'],insar_model8,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+plot_insar_model_resampled(['./myanmar/A143/AZI/los_samp',num2str(iint),'.mat'],insar_model9,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+plot_insar_model_resampled(['./myanmar/A70/LOS/los_samp',num2str(iint),'.mat'],insar_model10,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+% plot_insar_model_resampled(['./myanmar/A70/RNG/los_samp',num2str(iint),'.mat'],insar_model11,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+plot_insar_model_resampled(['./myanmar/A70/AZI/los_samp',num2str(iint),'.mat'],insar_model12,'iter_step',iint,'fault',fault_file,'model_type',model_type,'misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lon_eq,'latc',lat_eq);
+ % 
     % verify GPS component
 %     modelx = survey_gps_model(1:2)' * 10;  % to mm
 %     modely = survey_gps_model(3:4)' * 10;

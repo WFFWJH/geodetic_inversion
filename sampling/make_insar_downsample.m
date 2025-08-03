@@ -19,8 +19,14 @@ function [xout, yout, zout, Npt, rms_out, xx1, xx2, yy1, yy2] = make_insar_downs
 ismean = strcmp(method, 'mean');
 istrend = strcmp(method, 'trend');
 
-% r1 = 10;
-r1 = 10;
+% 根据 zinsar 范围设定初始阈值 r1
+z_min = min(zinsar(:));
+z_max = max(zinsar(:));
+z_range = z_max - z_min;
+
+r1_norm = 2;
+r1 = r1_norm*z_range;
+
 if (istrend)
     [xout, yout, zout, Npt, rms_out, xx1, xx2, yy1, yy2] = quad_decomp_trend(xinsar, yinsar, zinsar, r1, Nres_min, Nres_max, [], [], [], [], [], [], [], [], []);
 elseif (ismean)
@@ -31,6 +37,8 @@ end
 Ndata = length(zout);
 
 Nint = 0;
+
+max_iter = 30;
 while (Ndata < Nmin)
     N1 = length(zout);
     % r1 = r1 * 0.85;
@@ -44,12 +52,19 @@ while (Ndata < Nmin)
     Ndata = length(zout);
     N2 = length(zout); %after decreasing the threshold
     Nint = Nint + 1;
+    fprintf('Iter %d: r1=%.4f, N1=%d, N2=%d, Ndata=%d\n', Nint, r1, N1, N2, Ndata);
+
     if (N2 > 0.9 * Nmin & (N2 - N1) < 0.005 * N1)
         break; %stop the iteration if the the number of points are not increasing by 0.5 percent of the previous one
     end
+
+    if (Nint >= max_iter)
+        fprintf('Reached max iteration, Ndata may still be < Nmin\n');
+        break;
+    end
 end
 
-%Nint
+fprintf('Nint: %d ',Nint);
 
 
 function [xout, yout, zout, Ndata, rms_out, xx1, xx2, yy1, yy2] = quad_decomp_trend(xin, yin, zin, threshold, Nres_min, Nres_max, ...

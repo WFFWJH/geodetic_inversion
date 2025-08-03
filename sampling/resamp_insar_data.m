@@ -33,8 +33,7 @@ function resamp_insar_data(slip_model_in, data_list,Nmin,Nmax,iter_step,varargin
                        fault_file = varargin{CC*2};
                    case 'dec'
                        Nlook = varargin{CC*2};
-                   case 'data_type'
-                       data_type = varargin{CC*2};
+                   
                    case 'ref_lon'
                        ref_lon = varargin{CC*2};
                end
@@ -56,7 +55,9 @@ function resamp_insar_data(slip_model_in, data_list,Nmin,Nmax,iter_step,varargin
    disp(['There are ',num2str(ntrack),' tracks of data using quadtree sampling strategy.']);
    
    %%  read txt file again to find those tracks and specify each sample regions
-   track = cell(ntrack,1);   npt = zeros(ntrack,1);
+   track = cell(ntrack,1);
+   data_types = cell(ntrack,1);
+   npt = zeros(ntrack,1);
    fid = fopen(data_list);
    tmp_txt = fgetl(fid);
    count = 0;
@@ -64,10 +65,12 @@ function resamp_insar_data(slip_model_in, data_list,Nmin,Nmax,iter_step,varargin
        count = count + 1;
        strs = strsplit(tmp_txt);
        track(count) = cellstr(strs{1});
+       data_types(count) = cellstr(strs{7});
        disp(count);
        disp(npt);
        disp(str2double(strs{2}));
        npt(count) = str2double(strs{2});  
+       disp(npt);
        tmp_txt = fgetl(fid);
    end     
    fclose(fid);
@@ -81,7 +84,8 @@ function resamp_insar_data(slip_model_in, data_list,Nmin,Nmax,iter_step,varargin
    % iterative sample the data using model predictions
    for k=1:ntrack
        this_track=track{k};
-       disp(['working on ',this_track]);
+       data_type = data_types{k};
+       disp(['working on ',this_track, 'type: ', data_type]);
        this_npt=npt(k);
        
        % [x1,y1,demin]=grdread2([this_track,'/','dem_low.grd']);
@@ -122,8 +126,10 @@ function resamp_insar_data(slip_model_in, data_list,Nmin,Nmax,iter_step,varargin
 %        slip_model_in = tmp.slip_model;
        
        if strcmp(data_type,'insar')
+           disp('insar');
           los_model = slip2insar_okada(xin,yin,losl,zel,znl,zul,slip_model_in);   % fix the bug using multi-looked looking angles
        else
+           disp('azi');
           los_model = slip2AZO_okada(xin,yin,losl,zel,znl,zul,slip_model_in);     % add module to compute AZO data
        end
        

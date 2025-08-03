@@ -27,7 +27,6 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    lon_eq = -117.5; 
    lat_eq = 35.5;
    ref_lon = lon_eq;
-   axis_range = [50 150 -45 55];
    model_type = 'okada';
    
    if ~isempty(varargin)
@@ -85,9 +84,9 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    colorbar
    title(['Sampled Data (',label_name,')']);
    set(gca,'Fontsize',20);
-   clim([defo_min defo_max]);
-   axis(axis_range);
-%    axis equal
+   % clim([defo_min defo_max]);
+   % axis(axis_range);
+   axis equal tight;
    % plot the fault segments
    if ~isempty(fault_file)
        for ii = 1:LS
@@ -108,9 +107,9 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    colorbar
    title('Model');
    set(gca,'Fontsize',20);
-   clim([defo_min defo_max]);
-   axis(axis_range);
-%    axis equal
+   % clim([defo_min defo_max]);
+   % axis(axis_range);
+   axis equal tight;
    if ~isempty(fault_file)
        for ii = 1:LS
           slon = [lonf(ii) lonf(ii+LS)];
@@ -130,9 +129,9 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    colorbar
    title('Residual');
    set(gca,'Fontsize',20);
-   clim([-res_max res_max]);       % center with zero
-   axis(axis_range);
-%    axis equal
+   % clim([-res_max res_max]);       % center with zero
+   % axis(axis_range);
+   axis equal tight;
    if ~isempty(fault_file)
        for ii = 1:LS
           slon = [lonf(ii) lonf(ii+LS)];

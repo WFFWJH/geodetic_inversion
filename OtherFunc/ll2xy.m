@@ -17,8 +17,10 @@ r_dtor=pi/180;
 %     'K','L','M','N','P','Q','R','S','T','U',...
 %     'V','W','X'];
 
-r_a=6378206.4d0;    % earth radius
-r_e2=0.00676865799761d0;    %Square of Eccentricity of the Earth's ellipsoid
+r_a = 6378137;
+r_e2 = 0.006694379990141;
+% r_a=6378206.4d0;    % earth radius
+% r_e2=0.00676865799761d0;    %Square of Eccentricity of the Earth's ellipsoid
 r_k0=0.9996d0;    %scale at center
 r_lat0=0.0d0;    % Projected starting latitude
 r_fe=5e5;     % east offset

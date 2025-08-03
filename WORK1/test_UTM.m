@@ -1,19 +1,22 @@
-lon = [120.5, 93.90, 97.24];
-lat = [30.3, 17.24, 23.73];
+lons = [120.5, 93.90, 97.24];
+lats = [30.3, 17.24, 23.73];
 
 
+lon = lons(1);
+lat = lats(1);
 
 r_a = 6378137;
 r_e = sqrt(0.006694379990141);
 
 % r_a = 6378206.4; % clarke 1866 赤道半径 (米)
 % r_e = sqrt(0.00676865799761); % 平方偏心率
-
+get_utm_zone(lon)
 
 % 2. 使用ll2xy函数计算 (基于原始代码)
 [east1, north1] = ll2xy(lon, lat, 123); % 中央经线117°E
-[east2, north2, zone] = ll2utm(lat,lon,'clk66',51);
+[east2, north2] = latlon2utm_matlab(lat,lon,123);
 % [east2, north2, zone] = ll2utm(lat, lon, 'wgs84', 51);
+
 
 proj = projcrs(32651);
 [east3, north3] = projfwd(proj, lat, lon);
@@ -29,9 +32,9 @@ pyproj_northing = 3354494.855; % 北坐标
 fprintf('===== 结果比较 =====\n');
 fprintf('方法            东坐标       北坐标\n');
 fprintf('----------------------------------\n');
-fprintf('ll2xy:       %.3f    %.3f\n', east1, north1);
-fprintf('ll2utm:       %.3f    %.3f\n', east2, north2);
-fprintf('projfwd:       %.3f    %.3f\n', east3, north3);
+fprintf('ll2xy:       %.5f    %.5f\n', east1, north1);
+fprintf('self:       %.5f    %.5f\n', east2, north2);
+fprintf('projfwd:       %.5f    %.5f\n', east3, north3);
 
 
 fprintf('Python(基准):%.3f    %.3f\n', pyproj_easting, pyproj_northing);
@@ -44,6 +47,10 @@ fprintf('\n===== 差异分析 =====\n');
 fprintf('ll2xy与Python差异:  东 %.3f m, 北 %.3f m\n', diff_ll_vs_py(1), diff_ll_vs_py(2));
 fprintf('ll2utm与Python差异:  东 %.3f m, 北 %.3f m\n', diff_ll_vs_py1(1), diff_ll_vs_py1(2));
 
+function zone = get_utm_zone(lon)
+
+    zone = floor((lon+180)/6)+1;
+end
 
 
 function [xo, yo] = ll2xy(xi, yi, lon_c)
@@ -64,10 +71,10 @@ i_ft = 0;
 a_griddes = ['C', 'D', 'E', 'F', 'G', 'H', 'J', ...
     'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', ...
     'V', 'W', 'X'];
-r_a=6378206.4d0;
-r_e2=0.00676865799761d0;
-% r_a = 6378137;
-% r_e2 = 0.006694379990141;
+% r_a=6378206.4d0;
+% r_e2=0.00676865799761d0;
+r_a = 6378137;
+r_e2 = 0.006694379990141;
 r_k0 = 0.9996d0; %scale at center
 r_lat0 = 0.0d0;
 r_fe = 5e5;
@@ -137,4 +144,29 @@ else
     yo = r_v(:, 2);
 end
 
+end
+
+
+function [E, N] = latlon2utm_matlab(lon, lat, lon0)
+% latlon2utm_matlab  将 WGS84 的经纬度转为自定义中央经线下的 UTM 投影
+%   [E, N] = latlon2utm_matlab(lon, lat, lon0)
+% 输入：
+%   lon, lat — 经度、纬度（单位：deg），可以是标量，也可以是向量
+%   lon0     — 自定义中央经线（单位：deg）
+% 输出：
+%   E, N     — 投影坐标（单位：m）
+
+    % 1. 构造 Transverse Mercator 的 map projection structure
+    mstruct = defaultm('tranmerc');
+    % WGS84 椭球
+    mstruct.geoid = referenceEllipsoid('wgs84');
+    % 中央经线、中央纬线（这里纬度原点取 0）
+    mstruct.origin = [0 lon0 0];
+    % UTM 标准参数
+    mstruct.scalefactor   = 0.9996;    % k₀
+    mstruct.falseeasting  = 500000;    % x₀
+    mstruct.falsenorthing = 0;         % 南半球时设 1e7
+
+    % 2. 正算：将(lat, lon) → (E, N)
+    [E, N] = mfwdtran(mstruct, lat, lon);
 end
