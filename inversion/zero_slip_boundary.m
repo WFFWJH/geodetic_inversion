@@ -1,4 +1,4 @@
-function [W,d] = zero_slip_boundary(slip_model,segment_ID,top_layer_no,ratio)
+function [W,d] = zero_slip_boundary(slip_model,segment_ID,top_layer_no,ratio,ramp_choice)
 % add zero-slip constraint at the top surface
 % Supplements: add zero-slip constraint at the bottom surface
 %           also add zero-slip slip boundary slip at one side of the fault
@@ -50,5 +50,18 @@ function [W,d] = zero_slip_boundary(slip_model,segment_ID,top_layer_no,ratio)
         V(zero_slip_indx) = ratio;
     end
     W = diag(V);      % Use diagonal function to speed it up
+
+    h1 = size(W,1);
+       ramp_choice = lower(ramp_choice);   
+   if strcmp(ramp_choice,'bi_ramp')
+       rmp = zeros(h1,4);       % bilinear ramp
+   elseif strcmp(ramp_choice,'qu_ramp_7')
+       rmp = zeros(h1,7);
+   elseif strcmp(ramp_choice,'qu_ramp_5')
+       rmp = zeros(h1,5);
+   else
+       rmp = [];
+   end
+   W = [W,rmp];
     
 end

@@ -1,4 +1,4 @@
 # GMT 6 Session common arguments shelf
 BEGIN GMT 6.5.0
-R	455.362500000/459.237500000/15.475/23.275
+R	unwrap_l1.grd
 END

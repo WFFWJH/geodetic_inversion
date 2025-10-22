@@ -18,10 +18,9 @@ ramp_choice = lower(ramp_choice);
 switch option
     case {'insar', 'AZO'}
         sampled_data = data.sampled_insar_data;
-        h1 = size(sampled_data, 1);
-
-        %            rms_insar = double(data.rms_out);
-        rms_insar = ones(h1, 1); % uniform weighting for InSAR/AZO data
+        rms_insar = double(data.rms_out);
+        % h1 = size(sampled_data, 1);
+        % rms_insar = ones(h1, 1); % uniform weighting for InSAR/AZO data
         w_insar = calc_weight_insar_error(rms_insar);
 
         if strcmp(option, 'insar')

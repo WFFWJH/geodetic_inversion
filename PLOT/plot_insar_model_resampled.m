@@ -5,28 +5,29 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    xin = data.sampled_insar_data(:,1) / 1000;
    yin = data.sampled_insar_data(:,2) / 1000;
    look_angle = data.sampled_insar_data(:,4:6);
+
    
-   [filepath,~,~] = fileparts(sampled_data_file);
-   indx = find(filepath == '/');
+   [filepath,save_name,~] = fileparts(sampled_data_file);
+   % indx = find(filepath == '/');
    label_name = filepath;
-   save_name = filepath;
-   if ~isempty(indx)
-       if length(indx) == 2
-          label_name = filepath(1:indx(2)-1); 
-       else
-          label_name = filepath(1:indx(1)-1); 
-       end
-       save_name = filepath(1:indx(1)-1); 
-   end
    
-   defo_max = 120; % cmax(losin);
-   defo_min = -120; % min(losin);
-   res_max = 20;
+   % if ~isempty(indx)
+   %     if length(indx) == 2
+   %        label_name = filepath(1:indx(2)-1); 
+   %     else
+   %        label_name = filepath(1:indx(1)-1); 
+   %     end
+   %     save_name = filepath(1:indx(1)-1); 
+   % end
+   
+   defo_max = 300; % cmax(losin);
+   defo_min = -300; % min(losin);
+   res_max = 300;
    iter_step = 0;
    fault_file = [];
-   lon_eq = -117.5; 
-   lat_eq = 35.5;
-   ref_lon = lon_eq;
+   lon_eq = 95.33; 
+   lat_eq = 19.61;
+   ref_lon = 95;
    model_type = 'okada';
    
    if ~isempty(varargin)
@@ -84,11 +85,11 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    colorbar
    title(['Sampled Data (',label_name,')']);
    set(gca,'Fontsize',20);
-   % clim([defo_min defo_max]);
+   clim([defo_min defo_max]);
    % axis(axis_range);
    axis equal tight;
    % plot the fault segments
-   if ~isempty(fault_file)
+   if ~isempty(fault_trace)
        for ii = 1:LS
           slon = [lonf(ii) lonf(ii+LS)];
           slat = [latf(ii) latf(ii+LS)];
@@ -107,10 +108,10 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    colorbar
    title('Model');
    set(gca,'Fontsize',20);
-   % clim([defo_min defo_max]);
+   clim([defo_min defo_max]);
    % axis(axis_range);
    axis equal tight;
-   if ~isempty(fault_file)
+   if ~isempty(fault_trace)
        for ii = 1:LS
           slon = [lonf(ii) lonf(ii+LS)];
           slat = [latf(ii) latf(ii+LS)];
@@ -129,10 +130,10 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    colorbar
    title('Residual');
    set(gca,'Fontsize',20);
-   % clim([-res_max res_max]);       % center with zero
+   clim([-res_max res_max]);       % center with zero
    % axis(axis_range);
    axis equal tight;
-   if ~isempty(fault_file)
+   if ~isempty(fault_trace)
        for ii = 1:LS
           slon = [lonf(ii) lonf(ii+LS)];
           slat = [latf(ii) latf(ii+LS)];
@@ -144,6 +145,21 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
        end
    end
    
+   % 计算文字内容
+      rms0 = sum(los_model.^2);
+rms1 = sum(los_res.^2);
+redu_perc = 100*(rms0-rms1)/rms0;
+txt = sprintf('rms = %e\n misfit =  %e\n (dat., res.) =(%f%%)', rms0, rms1, redu_perc);
+
+% 在整个 figure 的归一化坐标系里添加文字
+annotation('textbox',[0.6,0.3,0.3,0.2], ...   % [x,y,w,h], 归一化坐标 (0~1)
+           'String',txt, ...
+           'FitBoxToText','on', ...
+           'HorizontalAlignment','center', ...
+           'VerticalAlignment','middle', ...
+           'EdgeColor','none', ...
+           'FontSize',14);
+
    % save the sampled model for future use
    sampled_model = double([xin*1000,yin*1000,los_model,look_angle]);   % same format with sampled data
    if strcmp(model_type,'okada')
@@ -155,7 +171,7 @@ function plot_insar_model_resampled(sampled_data_file,los_model,varargin)
    
    set(h0,'PaperPositionMode','auto');
 %    set(h0,'visible','off');
-%    saveas(h0,[filepath,'/',save_name,'_misfit_',num2str(iter_step)],'epsc');
+   saveas(h0,[filepath,'/',save_name,'_misfit_',num2str(iter_step)],'epsc');
    
 %    % save the residual
 %    if iter_step == 3

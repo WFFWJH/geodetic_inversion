@@ -18,7 +18,7 @@ p_strk=data(:,9);
 p_dip=data(:,10)*d2r;
 tp=data(:,11);
 slip1=-data(:,12)/100;
-slip2=-data(:,13)/100; %May need to adjust it based on which side of the block you are looking at.
+slip2=data(:,13)/100; %May need to adjust it based on which side of the block you are looking at.
 % min_s1=min(slip1);
 % max_s1=max(slip1);
 % min_s2=min(slip2);
@@ -31,7 +31,7 @@ slip2=-data(:,13)/100; %May need to adjust it based on which side of the block y
 % Ny=length(unique(indx_layer));
 N=length(xe);
 
-cmax = 500;
+% cmax = 500;
 seis_matfile = [];
 axis_range = [-30 20 0 50 -25 0];
 fault_file = [];
@@ -208,5 +208,7 @@ title(hc,'slip (m)');
 grid on
 set(gca,'Fontsize',20,'fontweight','bold');
 set(gcf,'PaperPositionMode','auto');
-
+disp(['Default CLim = [', num2str(gca().CLim), ']']);
+disp('Default colorbar.Ticks =');
+disp(colorbar().Ticks);
 end

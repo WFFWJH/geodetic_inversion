@@ -1,9 +1,10 @@
+
 %% Geodetic Inversion Test
 %11/15/2022, Xiaoyu Zou
 %For Turkey earthquake inversion, try to start from Step 4
 clear
 clc
-
+profile on 
 addpath("../OtherFunc/");
 addpath("../detrend/")
 addpath("../sign_mask/")
@@ -74,7 +75,7 @@ dip_change_id=para(9):para(10);%the array of fault ids that have dip angles not 
 dip_angle=[para(11) para(12) para(13) para(14)];%the array of fault ids that have dip angles not equal to 90 degrees
 iter_step=para(15);
 iter_step2=para(16);
-
+ramp_choice = "no_ramp";
 
 
 %% Step 1: data cleaning using clean_insar-data. Remove some near-field
@@ -138,7 +139,7 @@ slip_model_vs = load_fault_one_plane(fault_file,'dip_change_id',dip_change_id,'d
 
 
 %% Step 5: inversion using first downsampled data
-[slip_model,~,~] = make_fault_from_insar3(slip_model_vs,slip_model_ds,iter_step,'shallow_dip_id',[],'segment_smooth_file',segment_file,'intersect_smooth_file',intersect_file,'fault',fault_file,'lonc',lonc,'latc',latc,'ref_lon',ref_lon,'model_type','okada');
+[slip_model,~,~] = make_fault_from_insar3(slip_model_vs,slip_model_ds,iter_step,'ramp',ramp_choice,'shallow_dip_id',[],'segment_smooth_file',segment_file,'intersect_smooth_file',intersect_file,'fault',fault_file,'lonc',lonc,'latc',latc,'ref_lon',ref_lon,'model_type','okada');
 % iint=iter_step;
 
 % plot_insar_model_resampled(['./myanmar/D106/LOS/los_samp',num2str(iint),'.mat'],insar_model,'iter_step',iint,'fault',fault_file,'model_type','okada','misfit_range',30,'defo_max',120,'ref_lon',ref_lon,'lonc',lonc,'latc',latc);
@@ -152,5 +153,8 @@ resamp_insar_data(slip_model,data_list,Nmin, Nmax, iter_step2, 'fault', fault_fi
 iint=iter_step2;
 [slip_model,rms,model_roughness] = make_fault_from_insar3(slip_model_vs,slip_model_ds,iter_step2, ...
                      'segment_smooth_file',segment_file,'intersect_smooth_file',intersect_file,'fault',fault_file, ...
-                     'lonc',lonc,'latc',latc,'ref_lon',ref_lon);
-show_slip_model(slip_model,'misfit_range',400,'ref_lon',ref_lon,'lonc', lonc,'latc', latc,'axis_range',[50 150 -100 300 -50 0]);
+                     'lonc',lonc,'latc',latc,'ref_lon',ref_lon,'ramp',ramp_choice);
+show_slip_model(slip_model,'ref_lon',ref_lon,'lonc', lonc,'latc', latc,'axis_range',[50 150 -100 300 -50 0]);
+
+profile off
+profile viewer

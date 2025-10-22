@@ -25,12 +25,12 @@ function [lb,ub]=bounds_new(NS,NT,tSm,add_col,Con)
 %  ub(j:NT:length(ub))=0;
 % end  
 %end  
-
+slip_max = 10e2;
 Npatch = sum(tSm);
-lb=-7e2*ones(NT*Npatch,1);  %lower bound in cm
-ub= 7e2*ones(NT*Npatch,1);  %upper bound
-lb(Npatch+1:2*Npatch) = -7e2;   % dominated by strike slip
-ub(Npatch+1:2*Npatch) = 7e2;
+lb=-slip_max*ones(NT*Npatch,1);  %lower bound in cm
+ub= slip_max*ones(NT*Npatch,1);  %upper bound
+lb(Npatch+1:2*Npatch) = -slip_max;   % dominated by strike slip
+ub(Npatch+1:2*Npatch) = slip_max;
 
 % % purely strike-slip
 % lb(Npatch+1:2*Npatch) = 0;

@@ -12,8 +12,8 @@ ref_lon = lon_eq;
 slip_model = [];
 fault_id = 0;
 % divide fault patch versus depth
-W = 50e3; % make the faults deeper
-N_layer = 8;
+W = 45e3; % make the faults deeper
+N_layer = 6;
 lp_top = 1e3; % should be the similar spatial size with sampled data
 bias_lp = 1.3;
 bias_wp = 1.3;

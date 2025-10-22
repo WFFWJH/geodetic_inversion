@@ -1,4 +1,4 @@
-function w_insar=calc_weight_insar_error(rms_insar);
+function w_insar=calc_weight_insar_error(rms_insar)
 % calculate the weight  matrix of the InSAR from the uncertainity of the data
 %  
 %  Usage: w_insar=calc_weight_insar_error(rms_insar);

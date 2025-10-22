@@ -183,7 +183,7 @@ for k=1:ntrack
    save([this_track,'/los_samp',iint,'.mat'],'sampled_insar_data','rms_out','dem_out');
    
    [h0,~,~]=plot_insar_sample_new(xin,yin,losin,zout,xx1,xx2,yy1,yy2,'fault',fault_file); 
-   set(h0,'PaperPositionMode','auto');
-%    set(h0,'visible','off');
+   % set(h0,'PaperPositionMode','auto');
+   set(h0,'visible','off');
    saveas(h0,[this_track,'/','los_samp',num2str(iint)],'epsc');
 end

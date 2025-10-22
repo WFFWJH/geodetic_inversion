@@ -12,20 +12,20 @@ scale = -4*pi;                 % for offsets data
 % mask_file = 'mask_txt';
 % mask_insar_phase(this_track,insar_file,mask_file,wavelength_C,'los_max',80);
 
-%% Track D106
+% Track D106
 this_track = './myanmar/D106/LOS';
 insar_file = 'unwrap_ll.grd';
 mask_file = 'mask_txt';
 mask_insar_phase(this_track,insar_file,mask_file,wavelength_C,'los_max',80,'detrend',1,'nomask',1);
 
-this_track = './myanmar/D106/RNG';
-insar_file = 'rng_offset_ll.grd';
-output_grid = 'rng_off_sample.grd';
-system(['bash -c "', ...
-  'env -i LC_ALL=C HOME=', getenv('HOME'), ...
-  ' LD_LIBRARY_PATH=/opt/GMT-6.5.0/lib64:/lib:/usr/lib ', ...
-  'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/GMT-6.5.0/bin ', ...
-        'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
+% this_track = './myanmar/D106/RNG';
+% insar_file = 'rng_offset_ll.grd';
+% output_grid = 'rng_off_sample.grd';
+% system(['bash -c "', ...
+%   'env -i LC_ALL=C HOME=', getenv('HOME'), ...
+%   ' LD_LIBRARY_PATH=/opt/GMT-6.5.0/lib64:/lib:/usr/lib ', ...
+%   'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/GMT-6.5.0/bin ', ...
+%         'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
 
 
 this_track = './myanmar/D106/AZI';
@@ -37,11 +37,11 @@ system(['bash -c "', ...
   'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/GMT-6.5.0/bin ', ...
         'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
 
-% %% Track D33
-% this_track = './myanmar/D33/LOS';
-% insar_file = 'unwrap_ll.grd';
-% mask_file = 'mask_txt';
-% mask_insar_phase(this_track,insar_file,mask_file,wavelength_C,'los_max',80,'detrend',1,'nomask',1);
+%% Track D33
+this_track = './myanmar/D33/LOS';
+insar_file = 'unwrap_ll.grd';
+mask_file = 'mask_txt';
+mask_insar_phase(this_track,insar_file,mask_file,wavelength_C,'los_max',80,'detrend',1,'nomask',1);
 % 
 % this_track = './myanmar/D33/RNG';
 % insar_file = 'rng_offset_ll.grd';
@@ -53,16 +53,16 @@ system(['bash -c "', ...
 %         'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
 % 
 % 
-% this_track = './myanmar/D33/AZI';
-% insar_file = 'azi_offset_ll.grd';
-% output_grid = 'azi_off_sample.grd';
-% system(['bash -c "', ...
-%   'env -i LC_ALL=C HOME=', getenv('HOME'), ...
-%   ' LD_LIBRARY_PATH=/opt/GMT-6.5.0/lib64:/lib:/usr/lib ', ...
-%   'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/GMT-6.5.0/bin ', ...
-%         'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
+this_track = './myanmar/D33/AZI';
+insar_file = 'azi_offset_ll.grd';
+output_grid = 'azi_off_sample.grd';
+system(['bash -c "', ...
+  'env -i LC_ALL=C HOME=', getenv('HOME'), ...
+  ' LD_LIBRARY_PATH=/opt/GMT-6.5.0/lib64:/lib:/usr/lib ', ...
+  'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/GMT-6.5.0/bin ', ...
+        'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
 
-% %% Track A143
+%% Track A143
 % this_track = './myanmar/A143/LOS';
 % insar_file = 'unwrap_ll.grd';
 % mask_file = 'mask_txt';
@@ -78,21 +78,21 @@ system(['bash -c "', ...
 %         'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
 % 
 % 
-% this_track = './myanmar/A143/AZI';
-% insar_file = 'azi_offset_ll.grd';
-% output_grid = 'azi_off_sample.grd';
-% system(['bash -c "', ...
-%   'env -i LC_ALL=C HOME=', getenv('HOME'), ...
-%   ' LD_LIBRARY_PATH=/opt/GMT-6.5.0/lib64:/lib:/usr/lib ', ...
-%   'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/GMT-6.5.0/bin ', ...
-%         'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
+this_track = './myanmar/A143/AZI';
+insar_file = 'azi_offset_ll.grd';
+output_grid = 'azi_off_sample.grd';
+system(['bash -c "', ...
+  'env -i LC_ALL=C HOME=', getenv('HOME'), ...
+  ' LD_LIBRARY_PATH=/opt/GMT-6.5.0/lib64:/lib:/usr/lib ', ...
+  'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/GMT-6.5.0/bin ', ...
+        'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
 % 
-%% Track A70
+% Track A70
 % this_track = './myanmar/A70/LOS';
 % insar_file = 'unwrap_ll.grd';
 % mask_file = 'mask_txt';
 % mask_insar_phase(this_track,insar_file,mask_file,wavelength_C,'los_max',80,'detrend',1,'nomask',1);
-% 
+
 % this_track = './myanmar/A70/RNG';
 % insar_file = 'rng_offset_ll.grd';
 % output_grid = 'rng_off_sample.grd';
@@ -103,14 +103,14 @@ system(['bash -c "', ...
 %         'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
 % 
 % 
-% this_track = './myanmar/A70/AZI';
-% insar_file = 'azi_offset_ll.grd';
-% output_grid = 'azi_off_sample.grd';
-% system(['bash -c "', ...
-%   'env -i LC_ALL=C HOME=', getenv('HOME'), ...
-%   ' LD_LIBRARY_PATH=/opt/GMT-6.5.0/lib64:/lib:/usr/lib ', ...
-%   'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/GMT-6.5.0/bin ', ...
-%         'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
+this_track = './myanmar/A70/AZI';
+insar_file = 'azi_offset_ll.grd';
+output_grid = 'azi_off_sample.grd';
+system(['bash -c "', ...
+  'env -i LC_ALL=C HOME=', getenv('HOME'), ...
+  ' LD_LIBRARY_PATH=/opt/GMT-6.5.0/lib64:/lib:/usr/lib ', ...
+  'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/opt/GMT-6.5.0/bin ', ...
+        'gmt grdmath ',this_track,'/',insar_file,' 100',' MUL = ',this_track,'/',output_grid,'"']);
 
 % this_track = '/Users/zej011/coseismic/DES5/offsets';
 % insar_file = 'rng_off_filt_ll.grd';
