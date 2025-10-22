@@ -2,8 +2,10 @@ lons = [120.5, 93.90, 97.24];
 lats = [30.3, 17.24, 23.73];
 
 
-lon = lons(1);
-lat = lats(1);
+% lon = lons(1);
+% lat = lats(1);
+lon = lons;
+lat = lats;
 
 r_a = 6378137;
 r_e = sqrt(0.006694379990141);
@@ -35,18 +37,85 @@ fprintf('----------------------------------\n');
 fprintf('ll2xy:       %.5f    %.5f\n', east1, north1);
 fprintf('self:       %.5f    %.5f\n', east2, north2);
 fprintf('projfwd:       %.5f    %.5f\n', east3, north3);
+%% Fault
 
+ref_lon = 95;
+lon_eq = 95.33;
+lat_eq = 19.61;
+d2r = pi / 180;
+[xo, yo] = ll2xy(lon_eq, lat_eq, ref_lon);
+fault_data = load('fault');
+lon_pt = [fault_data(:, 1); fault_data(:, 3)];
+lat_pt = [fault_data(:, 2); fault_data(:, 4)];
+nflt = size(fault_data, 1);
 
-fprintf('Python(基准):%.3f    %.3f\n', pyproj_easting, pyproj_northing);
+[xutm_pt, yutm_pt] = ll2xy(lon_pt, lat_pt, ref_lon);
+xpt = xutm_pt - xo;
+ypt = yutm_pt - yo;
+strikes = zeros(1,nflt);
+thetas = strikes;
 
-% 计算差异
-diff_ll_vs_py = [east1 - pyproj_easting, north1 - pyproj_northing];
-diff_ll_vs_py1 = [east2 - pyproj_easting, north2 - pyproj_northing];
+% figure;
+% subplot(1,2,1);
+% plot(lon_pt,lat_pt)
+% subplot(1,2,2);
+% plot(xpt,ypt)
 
-fprintf('\n===== 差异分析 =====\n');
-fprintf('ll2xy与Python差异:  东 %.3f m, 北 %.3f m\n', diff_ll_vs_py(1), diff_ll_vs_py(2));
-fprintf('ll2utm与Python差异:  东 %.3f m, 北 %.3f m\n', diff_ll_vs_py1(1), diff_ll_vs_py1(2));
+for kk = 1:nflt
+    xstart = xpt(kk+nflt);
+    ystart = ypt(kk+nflt);
+    xend = xpt(kk);
+    yend = ypt(kk);
+    dx = xend - xstart; % negative constraint (the fault starts from the bottom to the top)
+    dy = yend - ystart;
 
+    L = sqrt(dx^2+dy^2);
+    theta = atan2(dy, dx);
+    strike1 = 90 - theta / d2r;
+
+    if (strike1 < 0)
+        strike1 = strike1 + 360;
+    end
+    strikes(kk) = strike1;
+    thetas(kk) = (90 - strike1) * d2r;
+    % fault_id = fault_id + 1;
+    % model_segment = make_fault_segments(fault_id, xstart, ystart, zstart, strike1, dip_angle, L, W, N_layer, lp_top, bias_lp, bias_wp);
+    % slip_model = [slip_model; model_segment];
+end
+
+%%
+N_layer = 6;
+bias_wp = 1.3;
+W = 50e3;
+wp_factor = zeros(N_layer, 1);
+for k = 1:N_layer
+    wp_factor(k) = bias_wp^(k - 1);
+end
+wp_top = W / sum(wp_factor);
+
+wp_layer = zeros(N_layer, 1);
+for k = 1:N_layer
+    wp_layer(k) = wp_top * bias_wp^(k - 1);
+end
+
+lp_top = 1e3;
+bias_lp = 1.3;
+L = 523.48e3;
+lp_layer = zeros(N_layer,1);
+for j = 1:N_layer
+    lp_this_layer_rough = lp_top * bias_lp^(j - 1);
+    N_this_layer = round(L/lp_this_layer_rough);
+    if N_this_layer == 0
+        lp_this_layer = L; % in case that one segment is really small
+        N_this_layer = 1;
+    else
+        lp_this_layer = L / N_this_layer;
+        lp_layer(j) = lp_this_layer;
+    end
+end
+wp_layer
+lp_layer
+%%
 function zone = get_utm_zone(lon)
 
     zone = floor((lon+180)/6)+1;
@@ -71,10 +140,10 @@ i_ft = 0;
 a_griddes = ['C', 'D', 'E', 'F', 'G', 'H', 'J', ...
     'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', ...
     'V', 'W', 'X'];
-% r_a=6378206.4d0;
-% r_e2=0.00676865799761d0;
-r_a = 6378137;
-r_e2 = 0.006694379990141;
+r_a=6378206.4d0;
+r_e2=0.00676865799761d0;
+% r_a = 6378137;
+% r_e2 = 0.006694379990141;
 r_k0 = 0.9996d0; %scale at center
 r_lat0 = 0.0d0;
 r_fe = 5e5;
